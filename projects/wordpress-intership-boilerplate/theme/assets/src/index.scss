@@ -1,0 +1,14 @@
+@import "./common-scss/index.scss";
+
+@import "./scss/clear.scss";
+@import "./scss/blocks/index.scss";
+
+//components-uikit
+//...
+//components-uikit-end
+
+//components
+@import "./components/header/header.scss";
+@import "./components/footer/footer.scss";
+//...
+//components-end

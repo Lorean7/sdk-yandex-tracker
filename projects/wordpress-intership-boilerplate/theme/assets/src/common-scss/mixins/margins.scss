@@ -1,0 +1,9 @@
+@mixin margin-horizontal($value) {
+  margin-left: $value;
+  margin-right: $value;
+}
+
+@mixin margin-vertical($value) {
+  margin-top: $value;
+  margin-bottom: $value;
+}

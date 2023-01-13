@@ -1,0 +1,9 @@
+@mixin box($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin max-box($max-width, $max-height: $max-width) {
+  max-width: $max-width;
+  max-height: $max-height;
+}

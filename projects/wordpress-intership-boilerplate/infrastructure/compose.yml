@@ -1,0 +1,111 @@
+version: "3"
+
+networks:
+  proxynetwork:
+    external: true
+
+volumes:
+  phpsocket:
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ../.wordpress/
+  plugin:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ../plugin/
+  theme:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ../theme/
+
+services:
+  nginx:
+    build: ./nginx/
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+    volumes:
+      - ./nginx/configs/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/configs/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/www/logs
+      - plugin:/var/www/html/wp-content/plugins/wib
+      - theme:/var/www/html/wp-content/themes/wib
+      - wordpress:/var/www/html
+      - phpsocket:/var/run/php
+    networks:
+      - proxynetwork
+    depends_on:
+      - php
+  php:
+    build: ./php/
+    working_dir: /var/www/html
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - PHP_MAX_EXECUTION_TIME=${PHP_MAX_EXECUTION_TIME}
+      - PHP_MEMORY_LIMIT=${PHP_MEMORY_LIMIT}
+      - PHP_POST_MAX_SIZE=${PHP_POST_MAX_SIZE}
+      - PHP_UPLOAD_MAX_FILESIZE=${PHP_UPLOAD_MAX_FILESIZE}
+      - PHP_OPCACHE_MEMORY_CONSUMPTION=${PHP_OPCACHE_MEMORY_CONSUMPTION}
+      - PHP_OPCACHE_INTERNED_STRINGS_BUFFER=${PHP_OPCACHE_INTERNED_STRINGS_BUFFER}
+      - PHP_OPCACHE_MAX_WASTED_PERCENTAGE=${PHP_OPCACHE_MAX_WASTED_PERCENTAGE}
+      - PHP_OPCACHE_VALIDATE_TIMESTAMPS=${PHP_OPCACHE_VALIDATE_TIMESTAMPS}
+      - PHP_OPCACHE_REVALIDATE_FREQ=${PHP_OPCACHE_REVALIDATE_FREQ}
+      - PHP_FPM_PM=${PHP_FPM_PM}
+      - PHP_FPM_PM_MAX_CHILDREN=${PHP_FPM_PM_MAX_CHILDREN}
+      - PHP_FPM_PM_START_SERVERS=${PHP_FPM_PM_START_SERVERS}
+      - PHP_FPM_PM_MIN_SPARE_SERVERS=${PHP_FPM_PM_MIN_SPARE_SERVERS}
+      - PHP_FPM_PM_MAX_SPARE_SERVERS=${PHP_FPM_PM_MAX_SPARE_SERVERS}
+      - PHP_FPM_PM_MAX_REQUESTS=${PHP_FPM_PM_MAX_REQUESTS}
+    volumes:
+      - ./php/configs/php.ini:/etc/php/7.4/fpm/php.ini
+      - ./php/configs/www.conf:/etc/php/7.4/fpm/pool.d/www.conf
+      - wordpress:/var/www/html
+      - plugin:/var/www/html/wp-content/plugins/wib
+      - theme:/var/www/html/wp-content/themes/wib
+      - phpsocket:/var/run/php/
+    networks:
+      - default
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:8.0.25
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    command:
+      --innodb-buffer-pool-size=${MYSQL_INNODB_BUFFER_POOL_SIZE}
+      --innodb-log-file-size=${MYSQL_INNODB_LOG_FILE_SIZE}
+      --sort-buffer-size=${MYSQL_SORT_BUFFER_SIZE}
+      --read-rnd-buffer-size=${MYSQL_READ_RND_BUFFER_SIZE}
+      --read-buffer-size=${MYSQL_READ_BUFFER_SIZE}
+      --join-buffer-size=${MYSQL_JOIN_BUFFER_SIZE}
+    security_opt:
+      - seccomp:unconfined
+    networks:
+      - default
+  phpmyadmin:
+    image: phpmyadmin:latest
+    environment:
+      - VIRTUAL_HOST=${PHPMYADMIN_VIRTUAL_HOST}
+      - PMA_ABSOLUTE_URI=${PHPMYADMIN_URL}
+      - UPLOAD_LIMIT=${PHPMYADMIN_UPLOAD_LIMIT}
+    depends_on:
+      - mysql
+    links:
+      - mysql:db
+    networks:
+      - default
+      - proxynetwork
+      

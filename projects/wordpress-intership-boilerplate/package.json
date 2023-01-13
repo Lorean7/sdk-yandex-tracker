@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "infrastructure/build": "npm run build --prefix=./infrastructure",
+    "infrastructure/up": "npm run up --prefix=./infrastructure",
+    "infrastructure/down": "npm run down --prefix=./infrastructure",
+    "infrastructure/bash-nginx": "npm run bash-nginx --prefix=./infrastructure",
+    "infrastructure/bash-php": "npm run bash-php --prefix=./infrastructure",
+    "infrastructure/bash-mysql": "npm run bash-mysql --prefix=./infrastructure",
+    "infrastructure/bash-phpmyadmin": "npm run bash-phpmyadmin --prefix=./infrastructure"
+  }
+}

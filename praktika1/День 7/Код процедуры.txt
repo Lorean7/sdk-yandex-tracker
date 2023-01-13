@@ -1,0 +1,8 @@
+DELIMITER //
+CREATE PROCEDURE Proc2 (name_id VARCHAR(100))
+BEGIN
+    SELECT * 
+    FROM kafedra.students, kafedra.groups 
+    WHERE kafedra.groups.id>2;
+END //
+DELIMITER ; 

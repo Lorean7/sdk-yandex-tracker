@@ -1,0 +1,12 @@
+{
+    "scripts": {
+      "build": "docker-compose --env-file .env -f compose.yml build",
+      "up": "docker-compose --env-file .env -f compose.yml up",
+      "down": "docker-compose --env-file .env -f compose.yml down",
+      "bash-nginx": "docker exec -it wib_nginx_1 bash",
+      "bash-php": "docker exec -it wib_php_1 bash",
+      "bash-mysql": "docker exec -it wib_mysql_1 bash",
+      "bash-phpmyadmin": "docker exec -it wib_phpmyadmin_1 bash"
+    }
+  }
+  

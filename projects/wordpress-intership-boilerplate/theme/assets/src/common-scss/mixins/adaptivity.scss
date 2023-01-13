@@ -1,0 +1,46 @@
+@mixin mr($media-ranges...) {
+  @if length($media-ranges) == 0 {
+    @error('media-ranges not passed!');
+  }
+
+  $query-parts: ();
+
+  @each $media-range in $media-ranges {
+    $from: nth($media-range, 1);
+    $until: nth($media-range, 2);
+
+    @if $from or $until {
+      $query-part: "";
+
+      @if $from {
+        $query-part: "#{$query-part} (min-width: #{$from})";
+      }
+
+      @if $from and $until {
+        $query-part: "#{$query-part} and";
+      }
+
+      @if $until {
+        $query-part: "#{$query-part} (max-width: #{$until})";
+      }
+
+      $query-parts: append($query-parts, $query-part);
+    }
+  }
+
+  $query: "";
+
+  @for $index from 1 through length($query-parts) {
+    $query-part: nth($query-parts, $index);
+
+    $query: "#{$query} #{$query-part}";
+
+    @if $index != length($query-parts) {
+      $query: "#{$query}, ";
+    }
+  }
+
+  @media #{$query} {
+    @content;
+  }
+}

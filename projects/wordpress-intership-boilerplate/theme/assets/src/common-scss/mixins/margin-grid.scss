@@ -1,0 +1,25 @@
+@mixin margin-grid() {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@mixin margin-grid-item(
+  $items-in-row-count,
+  $space-between-horizontal,
+  $space-between-vertical: $space-between-horizontal
+) {
+  width: calc(#{100% / $items-in-row-count} - #{$space-between-horizontal} * #{($items-in-row-count - 1) / $items-in-row-count});
+
+  margin-right: $space-between-horizontal;
+  margin-top: $space-between-vertical;
+
+  &:nth-of-type(#{$items-in-row-count}n) {
+    margin-right: 0;
+  }
+
+  @for $index from 1 through $items-in-row-count {
+    &:nth-of-type(#{$index}) {
+      margin-top: 0;
+    }
+  }
+}

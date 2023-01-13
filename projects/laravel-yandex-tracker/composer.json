@@ -1,0 +1,34 @@
+{
+    "name": "devprom/laravel-yandex-tracker",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "pzemlyanoy",
+            "email": "pzemlyanoy@yandex.ru"
+        }
+    ],
+    "scripts": {
+        "test": [
+            "vendor/bin/phpunit"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "DevProm\\LaravelYandexTracker\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "DevProm\\LaravelYandexTracker\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.5",
+        "symfony/options-resolver": "^6.2"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.25",
+        "phpunit/phpunit": "^9.5"       
+    }
+}
